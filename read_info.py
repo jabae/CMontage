@@ -3,6 +3,16 @@ Extract tile locations and generate tile_location.txt file.
 """
 
 
+import argparse
+
+parser = argparse.ArgumentParser()
+
+# IO
+parser.add_argument("st_file")
+
+args = parser.parse_args()
+
+
 def generate_tile_loc(st_file, out_file):
 
 	f_in = open(st_file, "rb")
@@ -29,3 +39,26 @@ def generate_tile_loc(st_file, out_file):
 
 	f_in.close()
 	f_out.close()
+
+
+def get_dir(file_path):
+
+	m = ""
+	i = 0
+	while m != "/":
+
+		i += 1
+		m = file_path[-i]
+		
+
+	return file_path[:-i+1]
+
+
+if __name__ == "__main__":
+
+	img_file = args.st_file
+
+	img_dir = get_dir(img_file)
+
+	output_file = img_dir + "tile_location.txt"
+	generate_tile_loc(img_file, output_file)
