@@ -24,7 +24,7 @@ def dissemble(tif_file, output_dir):
 	n = stack.shape[0]
 	for i in range(n):
 		tile = stack[i,:,:]
-		tif.imwrite(output_dir+"/s{}.tif".format(i), np.flip(tile, axis=0))
+		tif.imwrite(output_dir+"/s{0:04d}.tif".format(i), np.flip(tile, axis=0))
 
 
 def get_dir(file_path):

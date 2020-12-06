@@ -30,7 +30,7 @@ def generate_tile_loc(st_file, out_file):
 		yloc = int.from_bytes(tile_bin[4:6], "little")
 		zloc = int.from_bytes(tile_bin[6:8], "little")
 
-		f_out.write("s{}.tif {} {} {}\n".format(i, xloc, yloc, zloc))
+		f_out.write("s{0:04d}.tif {1} {2} {3}\n".format(i, xloc, yloc, zloc))
 
 		tile_bin = f_in.read(12)
 		v = int.from_bytes(tile_bin, "little")
