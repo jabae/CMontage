@@ -17,14 +17,17 @@ parser.add_argument("tif_file")
 args = parser.parse_args()
 
 
-def dissemble(tif_file, output_dir):
+def dissemble(tif_file, output_dir, flip=True):
 
 	stack = tif.imread(tif_file)
 
 	n = stack.shape[0]
 	for i in range(n):
 		tile = stack[i,:,:]
-		tif.imwrite(output_dir+"/s{0:04d}.tif".format(i), np.flip(tile, axis=0))
+		if flip:
+			tif.imwrite(output_dir+"/s{0:04d}.tif".format(i), np.flip(tile, axis=0))
+		else:
+			tif.imwrite(output_dir+"/s{0:04d}.tif".format(i), tile)
 
 
 def get_dir(file_path):
