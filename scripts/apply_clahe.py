@@ -53,7 +53,7 @@ if __name__ == "__main__":
 	img_dir = args.tif_folder
 	
 	prev_dir = get_dir(img_dir)
-	out_dir = os.path.join(prev_dir,"test/")
+	out_dir = os.path.join(prev_dir,"clahe/")
 
 	if not os.path.isdir(out_dir):
 		os.makedirs(out_dir)
@@ -70,5 +70,5 @@ if __name__ == "__main__":
 
 		if np.var(img)>30:
 
-			# tif.imwrite(os.path.join(out_dir, flist[i]), clahe.apply(img))
-			tif.imwrite(os.path.join(out_dir, flist[i]), img)
+			tif.imwrite(os.path.join(out_dir, flist[i]), clahe.apply(img))
+
