@@ -118,4 +118,11 @@ if __name__ == "__main__":
 				img = normalize(img)
 				img = clahe.apply(img)
 
+				if np.mean(img)<50:
+					a = (200/np.var(img))**0.5
+					b = 80
+					img = np.clip((img-np.mean(img))*a + b, 0, 255)
+
+				img = img.astype("uint8")
+
 				tif.imwrite(os.path.join(out_dir, img_layer[idx]), img)
