@@ -21,19 +21,19 @@ args = parser.parse_args()
 
 def read_tif(fname):
     
-    t = tif.imread(fname)
-    img = np.zeros(t.shape)
-    img[:,:] = tif.imread(fname)
+  t = tif.imread(fname)
+  img = np.zeros(t.shape)
+  img[:,:] = tif.imread(fname)
     
-    return img
+  return img
 
 
 def normalize(tile):
     
-    vmin = tile.min(); vmax = tile.max()
-    new_tile = (tile-vmin)*255/(vmax-vmin)
+  vmin = tile.min(); vmax = tile.max()
+  new_tile = (tile-vmin)*255/(vmax-vmin)
     
-    return new_tile.astype("uint8")
+  return new_tile.astype("uint8")
 
 
 def get_dir(file_path):
@@ -53,7 +53,7 @@ if __name__ == "__main__":
 	data_dir = args.dir
 	img_dir = os.path.join(data_dir, "tif/")
 	
-	out_dir = os.path.join(data_dir,"clahe/")
+	out_dir = os.path.join(data_dir,"clahe_new/")
 
 	if not os.path.isdir(out_dir):
 		os.makedirs(out_dir)
@@ -97,32 +97,13 @@ if __name__ == "__main__":
 			img = read_tif(fname)
 			img = normalize(img)
 			img = clahe.apply(img)
-
-			var_arr[np.where(x_uniq==x_layer[i])[0], np.where(y_uniq==y_layer[i])[0]] = np.var(img)
-			img_arr[np.where(x_uniq==x_layer[i])[0], np.where(y_uniq==y_layer[i])[0]] = i
-
-		for i in range(var_arr.shape[0]):
-			if np.sum(var_arr[i,:]<60)==var_arr.shape[1]:
-				img_arr[i,:] = -1
-		for i in range(var_arr.shape[1]):
-			if np.sum(var_arr[:,i]<60)==var_arr.shape[0]:
-				img_arr[:,i] = -1
-
-		img_arr = img_arr.reshape((-1,)).astype("int")
-		for idx in img_arr:
-
-			if idx != -1:
 			
-				fname = os.path.join(img_dir, img_layer[idx])
-				img = read_tif(fname)
-				img = normalize(img)
-				img = clahe.apply(img)
+			br = 95
+			if np.mean(img)<50:
+				a = (200/np.var(img))**0.5
+				img = np.clip((img-np.mean(img))*a + br, 0, 255)
 
-				if np.mean(img)<50:
-					a = (200/np.var(img))**0.5
-					b = 80
-					img = np.clip((img-np.mean(img))*a + b, 0, 255)
+			else:
+				img = np.clip((img + (br-np.mean(img))), 0, 255)
 
-				img = img.astype("uint8")
-
-				tif.imwrite(os.path.join(out_dir, img_layer[idx]), img)
+			tif.imwrite(os.path.join(out_dir, img_layer[i]), img.astype("uint8"))
