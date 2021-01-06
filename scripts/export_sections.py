@@ -22,6 +22,12 @@ parser.add_argument("--size", nargs="+", type=int, required=True)
 args = parser.parse_args()
 
 
+
+def distance(p1, p2):
+
+	return np.sum((p1 - p2)**2, axis=1)**0.5
+
+
 def compute_penalty(img):
 
 	x_size = img.shape[0]
@@ -36,6 +42,21 @@ def compute_penalty(img):
 	p = np.sum((coords - center)**2, axis=1)**0.5
 
 	return p.reshape((x_size, y_size))
+
+
+def penalty_tile_dist(img, x_off, y_off, w_tile, h_tile, w, h):
+
+	ctr = np.array([int(x_off + w_tile//2), int(y_off + h_tile//2)]).reshape((1,2))
+
+	d = np.min([distance(ctr, np.array([0,0])),
+							distance(ctr, np.array([h,0])),
+							distance(ctr, np.array([0,w])),
+							distance(ctr, np.array([h,w]))])
+
+	d = 1 - d/((w/2**2+h/2**2)**0.5)/2
+	p = np.ones(img.shape)*d
+
+	return p
 
 
 if __name__ == "__main__":
@@ -77,13 +98,13 @@ if __name__ == "__main__":
 			fname = os.path.join(img_dir, img_list[i])
 			tile = tif.imread(fname)
 
-			wt_tile = compute_penalty(tile)
-			wt_tile[np.where(tile==0)] = 9999
-
 			x_off = x_off_list[i]
 			y_off = y_off_list[i]
 			w_tile = trans_df[4][i]
 			h_tile = trans_df[5][i]
+
+			wt_tile = compute_penalty(tile)
+			wt_tile[np.where(tile==0)] = 9999
 
 			img_temp = np.zeros((h,w))
 			wt_temp = np.ones((h,w))*9999
