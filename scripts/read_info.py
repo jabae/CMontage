@@ -65,5 +65,5 @@ if __name__ == "__main__":
 
 	img_dir = get_dir(img_file)
 
-	output_file = img_dir + "tile_location.txt"
+	output_file = "/home/jabae/tile_location_new.txt"
 	generate_tile_loc(img_file, output_file, offset, prefix)

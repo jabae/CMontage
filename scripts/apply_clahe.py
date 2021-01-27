@@ -61,7 +61,7 @@ if __name__ == "__main__":
 	clahe = cv2.createCLAHE(clipLimit=2.0, tileGridSize=(8,8))
 
 	# Count number of tiles
-	f = open(os.path.join(data_dir, "tile_location.txt"), "r")
+	f = open(os.path.join(data_dir, "tile_location_add.txt"), "r")
 	
 	img_list = []; x_list = []; y_list = []; z_list =[]
 	for l in f.readlines():
